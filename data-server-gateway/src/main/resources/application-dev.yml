@@ -1,0 +1,48 @@
+server:
+  port: 2024
+spring:
+  application:
+    name: data-server-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.140:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            # 允许请求中携带的头信息
+            allowedHeaders: "*"
+            # 运行跨域的请求方式
+            allowedMethods: "*"
+            # 跨域检测的有效期,单位s
+            maxAge: 36000
+      routes:
+        - id: data-government
+          uri: lb://data-government
+          predicates:
+            - Path=/government/**
+        - id: data-manager
+          uri: lb://data-manager
+          predicates:
+            - Path=/admin/*/**
+        - id: data-report
+          uri: lb://data-report
+          predicates:
+            - Path=/report/**
+        - id: data-schedule
+          uri: lb://data-schedule
+          predicates:
+            - Path=/schedule/**
+        - id: data-statistics
+          uri: lb://data-statistics
+          predicates:
+            - Path=/statistic/*/**
+
+
+  main:
+    web-application-type: reactive

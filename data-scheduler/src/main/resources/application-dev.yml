@@ -1,0 +1,15 @@
+server:
+  port: 2023
+
+# Nacos注册注册
+spring:
+  application:
+    name: data-schedule
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.140:8848
+
+  main:
+    web-application-type: reactive
+

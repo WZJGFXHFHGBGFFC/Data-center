@@ -1,0 +1,58 @@
+#server:
+#  port: 9528
+
+#spring:
+#  application:
+#    name: service-order
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 192.168.10.140:8848
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://192.168.10.140:3306/db_spzx?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true
+#    username: root
+#    password: 123456
+#  data:
+#    redis:
+#      host: 192.168.10.140
+#      port: 6379
+#
+#mybatis:
+#  config-location: classpath:mybatis-config.xml
+#  mapper-locations: classpath:mapper/*/*.xml
+
+server:
+  port: 2020
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.xiaominfo.knife4j.demo.web
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# Nacos注册注册
+spring:
+  application:
+    name: data-government
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.140:8848
+
+
+  main:
+    web-application-type: reactive

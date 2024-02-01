@@ -1,0 +1,24 @@
+server:
+  port: 2021
+
+# Nacos注册注册
+spring:
+  application:
+    name: data-manager
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.140:8848
+
+
+# 告诉 Spring Boot 将你的应用程序配置为响应式的
+  main:
+    web-application-type: reactive
+
+
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://192.168.10.140:3306/db_spzx?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true
+#    username: root
+#    password: 123456
