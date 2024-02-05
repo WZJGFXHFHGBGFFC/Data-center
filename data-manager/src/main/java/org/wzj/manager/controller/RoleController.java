@@ -1,30 +1,33 @@
 package org.wzj.manager.controller;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.wzj.manager.bean.Permission;
-import org.wzj.manager.bean.RolePermission;
-import org.wzj.manager.service.RolePermissionService;
+import org.wzj.manager.entity.Permission;
+import org.wzj.manager.entity.RolePermission;
 import org.wzj.manager.service.RoleService;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.wzj.manager.bean.Role;
-import org.wzj.model.util.Result;
+import org.wzj.manager.entity.Role;
+import org.wzj.model.common.Result;
+import org.wzj.model.common.ResultCodeEnum;
+
 
 @RestController
 @RequestMapping("/admin/role")
-@Tag(name = "角色菜单")
+@Tag(name = "角色管理")
 public class RoleController {
+
+    @Autowired
+    private RoleService roleService;
+
     /**
      * 获取所有角色
      */
     @Operation(summary = "获取所有角色")
     @GetMapping("getAllRoles")
     public Result<List<Role>> getAllRoles() {
-        return Result.of(200, "success", RoleService.getAllRoles());
+        return Result.build(ResultCodeEnum.SUCCESS, roleService.getAllRoles());
     }
 
     /**
@@ -33,8 +36,8 @@ public class RoleController {
     @Operation(summary = "根据角色ID删除角色")
     @DeleteMapping("deleteRole/{roleId}")
     public Result<String> deleteRoleById(@PathVariable Long roleId) {
-        RoleService.deleteRole(roleId);
-        return Result.of(200, "success", "删除角色成功");
+        roleService.deleteRole(roleId);
+        return Result.build(ResultCodeEnum.SUCCESS, "角色删除成功");
     }
 
     /**
@@ -43,8 +46,8 @@ public class RoleController {
     @Operation(summary = "添加新角色")
     @PostMapping("addRole")
     public Result<String> addRole(@RequestParam String roleName) {
-        RoleService.addRole(roleName);
-        return Result.of(200, "success", "添加新角色成功");
+        roleService.addRole(roleName);
+        return Result.build(ResultCodeEnum.SUCCESS, "角色添加成功");
     }
 
     /**
@@ -53,7 +56,7 @@ public class RoleController {
     @Operation(summary = "根据角色ID获取菜单")
     @GetMapping("permissions/{roleId}")
     public Result<List<Permission>> getPermissionsByRoleId(@PathVariable Long roleId) {
-        return Result.of(200, "success", RolePermissionService.getPermissionsByRoleId(roleId));
+        return Result.build(ResultCodeEnum.SUCCESS, roleService.getPermissionsByRoleId(roleId));
     }
 
     /**
@@ -61,11 +64,8 @@ public class RoleController {
      */
     @Operation(summary = "为角色分配权限")
     @PostMapping("assignPermissionsToRole")
-    public Result<String> assignPermissionsToRole(@RequestBody RolePermission rolePermission) {
-        RolePermissionService.addRolePermissions(
-                rolePermission.getRoleId(),
-                Arrays.stream(rolePermission.getPermissionIds().split(",")).map(Long::parseLong).collect(Collectors.toList())
-        );
-        return Result.of(200, "success", "分配成功");
+    public Result<String> assignRoleToPermissions(@RequestBody RolePermission rolePermission) {
+        roleService.assignRoleToPermissions(rolePermission);
+        return Result.build(ResultCodeEnum.SUCCESS, "权限分配成功");
     }
 }

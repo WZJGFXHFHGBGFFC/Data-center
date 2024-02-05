@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wzj.statistics.mapper.TrafficMapper">
+
+    <select id="getTrafficStatistics" resultType="org.wzj.statistics.bean.TrafficStatistic">
+        SELECT dt,
+               recent_days as recentDays,
+               channel,uv_count as uvCount,
+               avg_duration_sec as avgDurationSec,
+               avg_page_count as avgPageCount,
+               sv_count as svCount,
+               bounce_rate AS bounceRate
+        FROM ads_traffic_stats_by_channel
+        WHERE dt = #{dt} AND recent_days = #{recentDays}
+        LIMIT #{limit} OFFSET #{page}
+    </select>
+    <select id="getPagePathCount" resultType="org.wzj.statistics.bean.PagePath">
+        SELECT source, target, path_count AS value
+        FROM ads_page_path
+        WHERE dt = #{dt} AND recent_days = #{recentDays}
+    </select>
+</mapper>

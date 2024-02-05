@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wzj.statistics.mapper.RealTimeMapper">
+
+    <select id="getGMV" resultType="java.math.BigDecimal">
+        SELECT SUM(order_amount) AS order_amount
+        FROM product_statistics
+        WHERE toYYYYMMDD(start_time) = #{date}
+    </select>
+    <select id="getProvinceStatistics" resultType="org.wzj.statistics.bean.GeneralStatistic">
+        SELECT province_name as name, toString(SUM(order_amount)) AS value
+        FROM province_statistics
+        WHERE toYYYYMMDD(start_time) = #{date}
+        GROUP BY province_id, province_name
+    </select>
+    <select id="getKeywordStatistics" resultType="org.wzj.statistics.bean.GeneralStatistic">
+        SELECT keyword as name,
+               toString(SUM(keyword_statistics.keyword_count * multiIf(source='SEARCH', 10, source='ORDER', 3, source='CART', 2, source='CLICK', 1, 0))) AS value
+        FROM keyword_statistics WHERE toYYYYMMDD(start_time) = #{date}
+        GROUP BY keyword
+        ORDER BY value DESC
+    </select>
+    <select id="getProductStatisticsGroupByCategory3" resultType="org.wzj.statistics.bean.GeneralStatistic">
+        SELECT category3_id, category3_name as name, toString(SUM(order_amount)) AS value
+        FROM product_statistics
+        WHERE toYYYYMMDD(start_time) = #{date}
+        GROUP BY category3_id, category3_name
+        HAVING order_amount > 0
+        ORDER BY value DESC
+    </select>
+    <select id="getProductStatsByTrademark" resultType="org.wzj.statistics.bean.GeneralStatistic">
+        SELECT tm_name as name, toString(SUM(order_amount)) AS value
+        FROM product_statistics
+        WHERE toYYYYMMDD(start_time) = #{date}
+        GROUP BY tm_id, tm_name
+        HAVING order_amount > 0
+        ORDER BY value DESC
+    </select>
+</mapper>

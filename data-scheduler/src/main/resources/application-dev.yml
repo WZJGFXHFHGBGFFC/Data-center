@@ -10,6 +10,20 @@ spring:
       discovery:
         server-addr: 192.168.10.140:8848
 
+
+  # 告诉 Spring Boot 将你的应用程序配置为响应式的
   main:
     web-application-type: reactive
+
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.10.140:3306/data_center?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true
+    username: root
+    password: 123456
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
 

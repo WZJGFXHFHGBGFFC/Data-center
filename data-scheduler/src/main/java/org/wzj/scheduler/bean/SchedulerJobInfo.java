@@ -83,7 +83,7 @@ public class SchedulerJobInfo {
 //    }
 //
 //    public void setDescription(String description) {
-//        this.description = description;
+//        this.value = description;
 //    }
 //
 //    public String getInterfaceName() {

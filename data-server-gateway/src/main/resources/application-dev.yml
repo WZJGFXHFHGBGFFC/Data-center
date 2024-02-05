@@ -42,7 +42,24 @@ spring:
           uri: lb://data-statistics
           predicates:
             - Path=/statistic/*/**
+        - id: Swagger-All
+          uri: lb://Swagger-All
+          predicates:
+            - Path=/swagger-resources/**
 
 
+#        - id: "swagger-route"
+#          uri: "lb://knife4j"
+#          predicates:
+#            - Path=/doc/**
+#          filters:
+#            - RewritePath=/doc/(?<segment>.*), /$\{segment}
+
+
+#禁用自动配置的数据源
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+#Spring Boot使用响应式的Web应用程序类型，以与Spring Cloud Gateway(属于响应式)兼容
   main:
     web-application-type: reactive

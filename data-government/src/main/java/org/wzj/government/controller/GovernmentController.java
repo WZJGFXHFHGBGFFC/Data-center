@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.wzj.government.bean.GovernmentDetail;
 import org.wzj.government.service.TableLineageService;
-import org.wzj.model.util.Result;
+import org.wzj.model.common.Result;
+import org.wzj.model.common.ResultCodeEnum;
 import org.wzj.scheduler.bean.MonitorDetail;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -81,12 +82,12 @@ public class GovernmentController {
             }
 
             connection.close();
-            return Result.of(200, "success", result);
+            return Result.build(ResultCodeEnum.SUCCESS, result);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        return Result.of(200, "success", new ArrayList<>());
+        return Result.build(ResultCodeEnum.SUCCESS, new ArrayList<>());
     }
 
     /**
@@ -118,11 +119,11 @@ public class GovernmentController {
             }
 
             connection.close();
-            return Result.of(200, "success", result);
+            return Result.build(ResultCodeEnum.SUCCESS, result);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        return Result.of(200, "success", new ArrayList<>());
+        return Result.build(ResultCodeEnum.SUCCESS, new ArrayList<>());
     }
 }

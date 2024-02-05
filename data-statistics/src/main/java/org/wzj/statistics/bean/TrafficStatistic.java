@@ -1,79 +1,34 @@
 package org.wzj.statistics.bean;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
+@Schema(description = "流量统计信息")
 public class TrafficStatistic {
+
+    @Schema(description = "日期")
     private String dt;
+
+    @Schema(description = "最近天数")
     private Integer recentDays;
+
+    @Schema(description = "渠道")
     private String channel;
+
+    @Schema(description = "UV数量")
     private Integer uvCount;
+
+    @Schema(description = "平均停留时长（秒）")
     private Integer avgDurationSec;
+
+    @Schema(description = "平均页面访问量")
     private Integer avgPageCount;
+
+    @Schema(description = "SV数量")
     private Integer svCount;
+
+    @Schema(description = "跳出率")
     private Double bounceRate;
 
-//    public String getDt() {
-//        return dt;
-//    }
-//
-//    public void setDt(String dt) {
-//        this.dt = dt;
-//    }
-//
-//    public Integer getRecentDays() {
-//        return recentDays;
-//    }
-//
-//    public void setRecentDays(Integer recentDays) {
-//        this.recentDays = recentDays;
-//    }
-//
-//    public String getChannel() {
-//        return channel;
-//    }
-//
-//    public void setChannel(String channel) {
-//        this.channel = channel;
-//    }
-//
-//    public Integer getUvCount() {
-//        return uvCount;
-//    }
-//
-//    public void setUvCount(Integer uvCount) {
-//        this.uvCount = uvCount;
-//    }
-//
-//    public Integer getAvgDurationSec() {
-//        return avgDurationSec;
-//    }
-//
-//    public void setAvgDurationSec(Integer avgDurationSec) {
-//        this.avgDurationSec = avgDurationSec;
-//    }
-//
-//    public Integer getAvgPageCount() {
-//        return avgPageCount;
-//    }
-//
-//    public void setAvgPageCount(Integer avgPageCount) {
-//        this.avgPageCount = avgPageCount;
-//    }
-//
-//    public Integer getSvCount() {
-//        return svCount;
-//    }
-//
-//    public void setSvCount(Integer svCount) {
-//        this.svCount = svCount;
-//    }
-//
-//    public Double getBounceRate() {
-//        return bounceRate;
-//    }
-//
-//    public void setBounceRate(Double bounceRate) {
-//        this.bounceRate = bounceRate;
-//    }
 }

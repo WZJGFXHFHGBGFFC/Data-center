@@ -1,8 +1,6 @@
 package org.wzj.manager.util;
 
-
-
-import org.wzj.manager.bean.Permission;
+import org.wzj.manager.entity.Permission;
 
 import java.util.ArrayList;
 import java.util.List;

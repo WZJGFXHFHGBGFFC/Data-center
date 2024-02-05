@@ -10,5 +10,33 @@ spring:
       discovery:
         server-addr: 192.168.10.140:8848
 
+
+  datasource:
+    # MySQL数据源配置
+    mysql:
+      type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.10.140:3306/data_center?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true
+      username: root
+      password: 123456
+
+    # ClickHouse数据源配置
+    clickhouse:
+      #      type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
+      url: jdbc:clickhouse://192.168.10.140:8123/default?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true
+#      username: root
+#      password: 123456
+  #Spring Boot使用响应式的Web应用程序类型，以与Spring Cloud Gateway(属于响应式)兼容
   main:
     web-application-type: reactive
+
+gateway:
+  service:
+    name: data-server-gateway
+
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*/*.xml
+

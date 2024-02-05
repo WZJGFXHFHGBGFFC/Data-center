@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.wzj.manager.mapper.RoleMapper">
+    <insert id="addRole">
+        INSERT INTO role (role_name) VALUES (#{addRole})
+    </insert>
+
+    <insert id="assignRoleToPermissions">
+        INSERT INTO role_permission (role_id, permission_id) VALUES
+        <foreach collection="permissionIds" item="permissionId" separator=",">
+            (#{roleId} , #{permissionId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRole">
+        DELETE FROM role WHERE id = #{roleId}
+    </delete>
+
+    <delete id="deletePermissionsByRoleId">
+        DELETE FROM role_permission WHERE role_id = #{roleId}
+    </delete>
+
+    <delete id="deleteUsersByRoleId">
+        DELETE FROM user_role WHERE role_id = #{roleId}
+    </delete>
+
+    <select id="getAllRoles" resultType="org.wzj.manager.entity.Role">
+        SELECT id, role_name FROM role
+    </select>
+
+    <select id="getPermissionsByRoleId" resultType="org.wzj.manager.entity.Permission">
+        SELECT p.id, p.parent_id, p.permission_name, p.permission_code, rp.permission_id
+        FROM permission p
+                 LEFT JOIN role_permission rp ON p.id = rp.permission_id AND rp.role_id = #{roleId}
+    </select>
+</mapper>

@@ -1,29 +1,37 @@
 package org.wzj.scheduler.controller;
 
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.wzj.model.util.Result;
+import org.wzj.model.common.Result;
+import org.wzj.model.common.ResultCodeEnum;
 import org.wzj.scheduler.bean.QuartzScheduler;
 import org.wzj.scheduler.bean.SchedulerJobInfo;
 import org.wzj.scheduler.job.MySQLMonitorJob;
 import org.wzj.scheduler.job.SimpleJob;
-import org.wzj.scheduler.service.SchedulerService;
+import org.wzj.scheduler.service.impl.SchedulerServiceImpl;
 import java.util.List;
-
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
+@Tag(name = "调度详情")
 @RestController
 @RequestMapping("/schedule")
 public class ScheduleController {
+
+    @Autowired
+    private SchedulerServiceImpl schedulerService;
+
     /**
      * 获取所有作业
      */
+    @Operation(summary = "获取所有作业")
     @GetMapping("getAllJobs")
     public Result<List<SchedulerJobInfo>> getAllJobs() {
-        return Result.of(200, "success", SchedulerService.getAllJobs());
+        return Result.build(ResultCodeEnum.SUCCESS, schedulerService.getAllJobs());
     }
 
     /**
@@ -34,8 +42,8 @@ public class ScheduleController {
         var scheduler = QuartzScheduler.getInstance();
         scheduler.pauseJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
         jobInfo.setJobStatus("已暂停");
-        SchedulerService.pauseJob(jobInfo);
-        return Result.of(200, "success", "任务暂停");
+        SchedulerServiceImpl.pauseJob(jobInfo);
+        return Result.build(ResultCodeEnum.SUCCESS, "任务暂停");
     }
 
     /**
@@ -46,8 +54,8 @@ public class ScheduleController {
         var scheduler = QuartzScheduler.getInstance();
         scheduler.resumeJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
         jobInfo.setJobStatus("运行中");
-        SchedulerService.resumeJob(jobInfo);
-        return Result.of(200, "success", "任务重启");
+        SchedulerServiceImpl.resumeJob(jobInfo);
+        return Result.build(ResultCodeEnum.SUCCESS, "任务重启");
     }
 
     /**
@@ -57,8 +65,8 @@ public class ScheduleController {
     public Result<String> deleteJob(@RequestBody SchedulerJobInfo jobInfo) throws Exception {
         var scheduler = QuartzScheduler.getInstance();
         scheduler.deleteJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
-        SchedulerService.deleteJob(jobInfo);
-        return Result.of(200, "success", "任务删除");
+        SchedulerServiceImpl.deleteJob(jobInfo);
+        return Result.build(ResultCodeEnum.SUCCESS, "任务删除");
     }
 
     /**
@@ -110,8 +118,8 @@ public class ScheduleController {
 
         // 将任务存入MySQL
         jobInfo.setJobStatus("运行中");
-        SchedulerService.addJob(jobInfo);
+        SchedulerServiceImpl.addJob(jobInfo);
 
-        return Result.of(200, "success", "创建任务成功");
+        return Result.build(ResultCodeEnum.SUCCESS, "创建任务成功");
     }
 }

@@ -1,20 +1,15 @@
 package org.wzj.manager.service;
 
-import org.wzj.manager.bean.UserLoginInfo;
 
-public class IndexService {
-    public static UserLoginInfo getUserInfo(String username) {
-        var user = UserService.getUserByName(username);
+import org.wzj.manager.entity.User;
+import org.wzj.manager.entity.UserLoginInfo;
+import org.wzj.model.common.Result;
 
-        // 根据用户id获取权限列表
-        if (user != null) {
-            var permissionsByUserId = PermissionService.getPermissionByUserId(user.getId());
-            var userLoginInfo = new UserLoginInfo();
-            userLoginInfo.setUsername(user.getUsername());
-            userLoginInfo.getRoutes().addAll(permissionsByUserId);
-            return userLoginInfo;
-        }
+public interface IndexService {
 
-        return null;
-    }
+    //登录API
+    Result<String> login(User userInfo);
+
+    //根据用户名称获取用户权限信息
+    UserLoginInfo userRolesInfo(String username);
 }
