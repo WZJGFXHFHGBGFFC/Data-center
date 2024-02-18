@@ -57,7 +57,7 @@ public class GovernmentController {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             var connection = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.140:3306/yuntai_government?useSSL=false",
+                    "jdbc:mysql://192.168.10.140:3306/data_center?useSSL=false",
                     "root",
                     "123456"
             );
@@ -98,7 +98,7 @@ public class GovernmentController {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             var connection = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.140:3306/yuntai_government?useSSL=false",
+                    "jdbc:mysql://192.168.10.140:3306/data_center?useSSL=false",
                     "root",
                     "123456"
             );

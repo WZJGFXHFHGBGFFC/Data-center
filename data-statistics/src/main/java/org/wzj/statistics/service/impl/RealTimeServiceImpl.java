@@ -21,6 +21,7 @@ public class RealTimeServiceImpl implements RealTimeService {
 
     private RealTimeMapper realTimeMapper;
 
+    //@PostConstruct 注解标记的方法会在对象实例化和依赖注入完成之后立即执行。
     @PostConstruct
     public void init() {
         realTimeMapper = clickhouseSqlSessionTemplate.getMapper(RealTimeMapper.class);

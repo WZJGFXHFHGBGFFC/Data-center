@@ -1,50 +1,28 @@
 package org.wzj.scheduler.bean;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Schema(description = "监控详情")
 public class MonitorDetail {
+
+    @Schema(description = "数据库名称")
     private String databaseName;
+
+    @Schema(description = "表名称")
     private String tableName;
+
+    @Schema(description = "字段名称")
     private String fieldName;
+
+    @Schema(description = "字段空值率")
     private Double fieldNullRate;
 
-//    public MonitorDetail() {
-//    }
-//
-//    public String getDatabaseName() {
-//        return databaseName;
-//    }
-//
-//    public void setDatabaseName(String databaseName) {
-//        this.databaseName = databaseName;
-//    }
-//
-//    public String getTableName() {
-//        return tableName;
-//    }
-//
-//    public void setTableName(String tableName) {
-//        this.tableName = tableName;
-//    }
-//
-//    public String getFieldName() {
-//        return fieldName;
-//    }
-//
-//    public void setFieldName(String fieldName) {
-//        this.fieldName = fieldName;
-//    }
-//
-//    public Double getFieldNullRate() {
-//        return fieldNullRate;
-//    }
-//
-//    public void setFieldNullRate(Double fieldNullRate) {
-//        this.fieldNullRate = fieldNullRate;
-//    }
 
     @Override
     public String toString() {

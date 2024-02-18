@@ -1,16 +1,15 @@
 package org.wzj.scheduler.service.impl;
 
-
-
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.wzj.scheduler.bean.QuartzScheduler;
 import org.wzj.scheduler.bean.SchedulerJobInfo;
-import org.wzj.scheduler.mapper.SchedulerMapper;
+import org.wzj.scheduler.mapper.schedulerInfoMapper.SchedulerMapper;
 import org.wzj.scheduler.service.SchedulerService;
+import org.wzj.scheduler.utils.BuildJob;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.AbstractMap;
 import java.util.List;
 
 @Service
@@ -18,6 +17,13 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     @Autowired
     private SchedulerMapper schedulerMapper;
+
+    // 从QuartzScheduler类获取Quartz调度器的单例实例
+    Scheduler scheduler = QuartzScheduler.getScheduler();
+
+
+    // 任务总执行次数
+    private static Long triggerCount = 0L;
 
     /**
      * 获取所有调度的任务
@@ -30,93 +36,58 @@ public class SchedulerServiceImpl implements SchedulerService {
     /**
      * 添加新的需要调度的任务
      */
-    public static void addJob(SchedulerJobInfo jobInfo) {
-        try {
-            var connection = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.140:3306/yuntai_schedule?useSSL=false&characterEncoding=utf8",
-                    "root",
-                    "123456"
-            );
-            var insertStatement = connection.prepareStatement(
-                    "INSERT INTO scheduler_job_info (jobName, jobGroup, jobStatus, repeatTime, jobClass, cronJob, cronExpression, jobType) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            );
-            insertStatement.setString(1, jobInfo.getJobName());
-            insertStatement.setString(2, jobInfo.getJobGroup());
-            insertStatement.setString(3, jobInfo.getJobStatus());
-            insertStatement.setInt(4, jobInfo.getRepeatTime());
-            insertStatement.setString(5, jobInfo.getJobClass());
-            insertStatement.setBoolean(6, jobInfo.getCronJob());
-            insertStatement.setString(7, jobInfo.getCronExpression());
-            insertStatement.setString(8, jobInfo.getJobType());
-            insertStatement.execute();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void addJob(SchedulerJobInfo jobInfo, String databaseName, String tableName, String fieldName) throws SchedulerException {
+
+        // 通过构建新任务工具类获取新任务信息
+        AbstractMap.SimpleEntry<JobDetail, Trigger> jobDetailTriggerSimpleEntry = BuildJob.buildJob(jobInfo, databaseName, tableName, fieldName, triggerCount);
+
+        // 调度任务
+        scheduler.scheduleJob(jobDetailTriggerSimpleEntry.getKey(), jobDetailTriggerSimpleEntry.getValue());
+        scheduler.start();
+
+        // 添加新的需要调度的任务
+        jobInfo.setJobStatus("运行中");
+        schedulerMapper.addJob(jobInfo);
     }
 
     /**
      * 暂停任务
      */
-    public static void pauseJob(SchedulerJobInfo jobInfo) {
-        try {
-            var connection = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.140:3306/yuntai_schedule?useSSL=false&characterEncoding=utf8",
-                    "root",
-                    "123456"
-            );
-            var insertStatement = connection.prepareStatement(
-                    "UPDATE scheduler_job_info SET jobStatus = '已暂停' WHERE jobName = ? AND jobGroup = ?"
-            );
-            insertStatement.setString(1, jobInfo.getJobName());
-            insertStatement.setString(2, jobInfo.getJobGroup());
-            insertStatement.execute();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public  void pauseJob(SchedulerJobInfo jobInfo) throws SchedulerException {
+
+        // 调用scheduler的pauseJob方法，传入一个新建的JobKey对象（由jobInfo提供的任务名称和任务组构成）来唯一标识并暂停对应的任务。
+        scheduler.pauseJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
+
+        // 调用schedulerMapper的pauseJob方法，更新数据库，标记该任务为暂停状态。
+        jobInfo.setJobStatus("已暂停");
+        schedulerMapper.pauseJob(jobInfo);
     }
 
     /**
      * 重启任务
      */
-    public static void resumeJob(SchedulerJobInfo jobInfo) {
-        try {
-            var connection = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.140:3306/yuntai_schedule?useSSL=false&characterEncoding=utf8",
-                    "root",
-                    "123456"
-            );
-            var insertStatement = connection.prepareStatement(
-                    "UPDATE scheduler_job_info SET jobStatus = '运行中' WHERE jobName = ? AND jobGroup = ?"
-            );
-            insertStatement.setString(1, jobInfo.getJobName());
-            insertStatement.setString(2, jobInfo.getJobGroup());
-            insertStatement.execute();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void resumeJob(SchedulerJobInfo jobInfo) throws SchedulerException {
+
+        // 调用scheduler的pauseJob方法，传入一个新建的JobKey对象（由jobInfo提供的任务名称和任务组构成）来唯一标识并暂停对应的任务。
+        scheduler.resumeJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
+
+        // 重启任务
+        jobInfo.setJobStatus("运行中");
+        schedulerMapper.resumeJob(jobInfo);
     }
 
     /**
      * 删除某个任务
      */
-    public static void deleteJob(SchedulerJobInfo jobInfo) {
-        try {
-            var connection = DriverManager.getConnection(
-                    "jdbc:mysql://192.168.10.140:3306/yuntai_schedule?useSSL=false",
-                    "root",
-                    "123456"
-            );
-            var deleteStatement = connection.prepareStatement(
-                    "DELETE FROM scheduler_job_info WHERE id = ?"
-            );
-            deleteStatement.setLong(1, jobInfo.getId());
-            deleteStatement.execute();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void deleteJob(SchedulerJobInfo jobInfo) throws SchedulerException {
+        // 调用scheduler的pauseJob方法，传入一个新建的JobKey对象（由jobInfo提供的任务名称和任务组构成）来唯一标识并暂停对应的任务。
+        scheduler.deleteJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
+
+        // 删除某个任务
+        schedulerMapper.deleteJob(jobInfo);
     }
 }

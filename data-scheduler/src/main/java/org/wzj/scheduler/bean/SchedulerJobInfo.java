@@ -1,112 +1,46 @@
 package org.wzj.scheduler.bean;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Schema(description = "调度任务信息")
 public class SchedulerJobInfo {
+
+    @Schema(description = "ID")
     private Long id;
+
+    @Schema(description = "任务类型")
     private String jobType;
 
+    @Schema(description = "任务名称")
     private String jobName;
+
+    @Schema(description = "任务组")
     private String jobGroup;
+
+    @Schema(description = "任务状态")
     private String jobStatus;
+
+    @Schema(description = "任务类名")
     private String jobClass;
+
+    @Schema(description = "Cron表达式")
     private String cronExpression;
+
+    @Schema(description = "描述")
     private String description;
+
+    @Schema(description = "接口名称")
     private String interfaceName;
+
+    @Schema(description = "重复次数")
     private Integer repeatTime;
+
+    @Schema(description = "Cron任务")
     private Boolean cronJob;
 
-//    public SchedulerJobInfo() {
-//    }
-//
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-//
-//    public String getJobType() {
-//        return jobType;
-//    }
-//
-//    public void setJobType(String jobType) {
-//        this.jobType = jobType;
-//    }
-//
-//    public String getJobName() {
-//        return jobName;
-//    }
-//
-//    public void setJobName(String jobName) {
-//        this.jobName = jobName;
-//    }
-//
-//    public String getJobGroup() {
-//        return jobGroup;
-//    }
-//
-//    public void setJobGroup(String jobGroup) {
-//        this.jobGroup = jobGroup;
-//    }
-//
-//    public String getJobStatus() {
-//        return jobStatus;
-//    }
-//
-//    public void setJobStatus(String jobStatus) {
-//        this.jobStatus = jobStatus;
-//    }
-//
-//    public String getJobClass() {
-//        return jobClass;
-//    }
-//
-//    public void setJobClass(String jobClass) {
-//        this.jobClass = jobClass;
-//    }
-//
-//    public String getCronExpression() {
-//        return cronExpression;
-//    }
-//
-//    public void setCronExpression(String cronExpression) {
-//        this.cronExpression = cronExpression;
-//    }
-//
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.value = description;
-//    }
-//
-//    public String getInterfaceName() {
-//        return interfaceName;
-//    }
-//
-//    public void setInterfaceName(String interfaceName) {
-//        this.interfaceName = interfaceName;
-//    }
-//
-//    public Integer getRepeatTime() {
-//        return repeatTime;
-//    }
-//
-//    public void setRepeatTime(Integer repeatTime) {
-//        this.repeatTime = repeatTime;
-//    }
-//
-//    public Boolean getCronJob() {
-//        return cronJob;
-//    }
-//
-//    public void setCronJob(Boolean cronJob) {
-//        this.cronJob = cronJob;
-//    }
+    // Getters and Setters
 }

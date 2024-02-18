@@ -42,10 +42,6 @@ spring:
           uri: lb://data-statistics
           predicates:
             - Path=/statistic/*/**
-        - id: Swagger-All
-          uri: lb://Swagger-All
-          predicates:
-            - Path=/swagger-resources/**
 
 
 #        - id: "swagger-route"
